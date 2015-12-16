@@ -1,0 +1,15 @@
+solution status: optimal solution found
+objective value:                              76.2524
+x#1#2                                               1 	(obj:0)
+x#2#1                                               1 	(obj:0)
+x#3#1                                               1 	(obj:0)
+x#4#3                                               1 	(obj:0)
+x#5#1                                               1 	(obj:0)
+x#6#3                                               1 	(obj:0)
+x#7#2                                               1 	(obj:0)
+x#8#2                                               1 	(obj:0)
+x#9#1                               0.614543272736364 	(obj:0)
+x#9#2                               0.385456727263636 	(obj:0)
+x#10#1                              0.148743617979778 	(obj:0)
+x#10#3                              0.851256382020222 	(obj:0)
+z                                             76.2524 	(obj:1)
