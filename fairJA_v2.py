@@ -209,17 +209,18 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
                 zcapacity[int(y.dist_m)-1] += float(c_arr[int(y.dist_j)-1])
                 zvalue[int(y.dist_m)-1] += float(b_arr[int(y.dist_j)-1])
             else:
-                sortlist[int(y.dist_j)-1].append(SolStruct(y.dist_j,y.value,y.dist_m))
+                sortlist[int(y.dist_j)-1].append(SolStruct(y.dist_j,float(y.value),y.dist_m))
 
         # job with high benefit -> low benefit
         # jindex = range(int(jobs))        
         # tmp_b_arr = list(b_arr)
         # idx_benefit = zip(tmp_b_arr, jindex)
         # sorted(idx_benefit, reverse = True)
-        tmp_b_arr = list(b_arr)
-        combine = zip(tmp_b_arr, sortlist)
-        sortlist_x = [sortlist for tmp_b_arr, sortlist in sorted(combine, reverse = True)]
-
+        tmp_b_arr = []
+        for b in b_arr:
+            tmp_b_arr.append(float(b))
+        combine = sorted(zip(tmp_b_arr, sortlist), reverse = True)
+        sortlist_x = list(x[1] for x in combine)
         # mindex = range(int(machines))
         # idx_zvalue = zip(zvalue, mindex)
                 
@@ -247,7 +248,7 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
         for j in range(0, int(jobs)):
             for x in sortlist_x[j]:
                 x = x._replace(value = zcapacity[int(x.dist_m)-1])    
-            sorted(sortlist_x[j], key = attrgetter('value'))
+            sortlist_x[j] = sorted(sortlist_x[j], key = attrgetter('value'))
             for jm in range(0,len(sortlist_x[j])):
                 mm = int(sortlist_x[j][jm].dist_m)-1
                 jj = int(sortlist_x[j][jm].dist_j)-1

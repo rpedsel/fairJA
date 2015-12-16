@@ -220,8 +220,7 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
             tmp_b_arr.append(float(b))
         jindex = range(int(jobs))        
         #tmp_b_arr = list(b_arr)
-        idx_benefit = zip(jindex, tmp_b_arr)
-        sorted(idx_benefit, key = itemgetter(1), reverse = True)
+        idx_benefit = sorted(zip(jindex, tmp_b_arr), key = itemgetter(1), reverse = True)
         
 
         vf.write("idx_benefit: "+str(idx_benefit)+"\n")
@@ -233,8 +232,8 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
         idx_zvalue = zip(mindex, zvalue)
                 
         for j in idx_benefit:
-            idx_zvalue = zip(zvalue, mindex)
-            sorted(idx_zvalue, key = itemgetter(1))
+            idx_zvalue = zip(mindex, zvalue)
+            idx_zvalue = sorted(idx_zvalue, key = itemgetter(0))
             vf.write("idx_zvalue: "+str(idx_zvalue)+"\n")
             for m in idx_zvalue:
                 vf.write("m[0]: "+str(m[0])+" j[0] = "+str(j[0])+"j[1] ="+str(j[1])+"\n")
