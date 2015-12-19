@@ -208,7 +208,7 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
             
         for y in llist[x-1]:
             #if capacity != "N":
-            if y.value == 1:
+            if y.value == 1.0:
                 job_check[int(y.dist_j)-1] = 1
                 zcapacity[int(y.dist_m)-1] += float(c_arr[int(y.dist_j)-1])
                 zvalue[int(y.dist_m)-1] += float(b_arr[int(y.dist_j)-1])
@@ -235,7 +235,7 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
                 mm = int(sortlist_x[j][jm].dist_m)-1
                 jj = int(sortlist_x[j][jm].dist_j)-1
                 tmp = zcapacity[mm] + float(c_arr[jj])
-                if tmp <= K:
+                if tmp <= float(K):
                     if job_check[jj] == 0:
                         zvalue[mm] += float(b_arr[jj])
                         zcapacity[mm] += float(c_arr[jj])
@@ -298,6 +298,8 @@ for xx in range (1,3):
             z_star = zStartSeeker(benefit, capacity, loading)
             z_linear, z_linear_list = zLinearSeeker(benefit, capacity, loading)
             z_apxm = zApproximateSeeker(benefit, capacity, loading, z_linear_list)
+
+            #print "****z_linear_list****: "z_linear_list+"\n"
 
             z_star_avg = round(sum(z_star)/float(len(z_star)), 4)
             z_apxm_avg = round(sum(z_apxm)/float(len(z_apxm)), 4)

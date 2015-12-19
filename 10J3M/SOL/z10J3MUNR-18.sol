@@ -1,13 +1,13 @@
 solution status: optimal solution found
-objective value:                              89.0224
+objective value:                     96.5720000000001
 x#1#3                                               1 	(obj:0)
-x#2#3                                               1 	(obj:0)
-x#3#3                                               1 	(obj:0)
-x#4#2                                               1 	(obj:0)
+x#2#1                                               1 	(obj:0)
+x#3#1                                               1 	(obj:0)
+x#4#3                                               1 	(obj:0)
 x#5#2                                               1 	(obj:0)
-x#6#2                               0.999999999999998 	(obj:0)
-x#7#1                                               1 	(obj:0)
+x#6#1                                               1 	(obj:0)
+x#7#3                                               1 	(obj:0)
 x#8#2                                               1 	(obj:0)
 x#9#1                                               1 	(obj:0)
-x#10#1                                              1 	(obj:0)
-z                                             89.0224 	(obj:1)
+x#10#2                                              1 	(obj:0)
+z                                    96.5720000000001 	(obj:1)

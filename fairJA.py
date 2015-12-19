@@ -78,7 +78,6 @@ def zStartSeeker(benefit, capacity, loading):
             Array_opt = []
             for line in ins:
                 Array_opt.append(line)
-       
         i,j,zvalue = Array_opt[1].split()
         z_star.append(round(float(zvalue),4))
     return z_star
@@ -201,13 +200,13 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
         K = Array_dat[int(jobs)+1]    
         
 
-        for j in range(0,int(jobs)):
+        for j in range(0,int(jobs)):  #####change
             sortlist.append([])
 
             
         for y in llist[x-1]:
             #if capacity != "N":
-            if y.value == 1:
+            if y.value == "1":
                 job_check[int(y.dist_j)-1] = 1
                 zcapacity[int(y.dist_m)-1] += float(c_arr[int(y.dist_j)-1])
                 zvalue[int(y.dist_m)-1] += float(b_arr[int(y.dist_j)-1])
@@ -216,11 +215,12 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
 
         # job with high benefit -> low benefit        
 
-        tmp_b_arr = []
-        for b in b_arr:
-            tmp_b_arr.append(float(b))
-        combine = sorted(zip(tmp_b_arr, sortlist), reverse = True)
-        sortlist_x = list(x[1] for x in combine)
+        #tmp_b_arr = []  ## map
+        #for b in b_arr:
+        #    tmp_b_arr.append(float(b))
+        tmp_b_arr = map(float,b_arr)
+        combine = sorted(zip(tmp_b_arr, sortlist), key = lambda x:x[0], reverse = True)
+        sortlist_x = map(lambda x:x[1], combine)
 
         
                 
@@ -234,13 +234,20 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
                 mm = int(sortlist_x[j][jm].dist_m)-1
                 jj = int(sortlist_x[j][jm].dist_j)-1
                 tmp = zcapacity[mm] + float(c_arr[jj])
-                if tmp <= K:
+                if tmp <= float(K):
                     if job_check[jj] == 0:
                         zvalue[mm] += float(b_arr[jj])
                         zcapacity[mm] += float(c_arr[jj])
                         job_check[jj] = 1
-                    #break          
-                
+        #                 print "\ntmp = "+str(tmp)
+        #                 print "K = "+K
+        #                 print "**************job "+str(jj+1)+" allocated to machine "+str(mm+1)
+        #                 print "zvalue: "+str(zvalue)
+        #                 print "zcapacity: "+str(zcapacity)+"\n"
+        #             #break          
+        # print "******************\n"+str(x)+" "+benefit+capacity+loading
+        # print "zvalue: "+str(zvalue)
+        # print "zcapacity: "+str(zcapacity)+"\n\n"        
         # if capacity == "N":
         #     for l1 in range(0,len(llist[x-1])):
         #         for l2 in range(l1+1,len(llist[x-1])):
@@ -263,6 +270,8 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
 data_count = 20                                     
 jobs = raw_input("Number of jobs:")           
 machines = raw_input("Number of machines:")
+#jobs = '10'
+#machines = '3'
 
 vs = jobs+"J"+machines+"M"+"/"+jobs+"J"+machines+"M.stat" 
 vsf = open(vs, 'a')
@@ -294,6 +303,8 @@ for xx in range (1,3):
                 loading = "R"
             z_linear, z_linear_list = zLinearSeeker(benefit, capacity, loading)
             z_apxm = zApproximateSeeker(benefit, capacity, loading, z_linear_list)
+
+            #print "****z_linear_list****: "+str(z_linear_list)+"\n"
 
             z_linear_avg = round(sum(z_linear)/float(len(z_linear)), 4)
             z_apxm_avg = round(sum(z_apxm)/float(len(z_apxm)), 4)
