@@ -27,62 +27,58 @@ if not os.path.exists(subdirectory):
     os.makedirs(subdirectory) 
 
 
-def B(x):
-    return {
-        0: 'N',
-        1: 'U',
-    }[x%2]
+for xx in range (1,3):
+    if xx == 1:
+        benefit = "N"
+    else:
+        benefit = "U"
+    for yy in range (1,4):
+        if yy == 1:
+            capacity = "L"
+        elif yy == 2:
+            capacity = "T"
+        else:
+            capacity = "N"
+        for zz in range (1,5):
+            if zz == 1:
+                loading = "L"
+            elif zz == 2:
+                loading = "X"
+            elif zz == 3:
+                loading = "A"
+            else:
+                loading = "R"
 
-def C(x):
-    return {
-        0: 'L',
-        1: 'T',
-        2: 'N',
-    }[x%3]
+            for x in range(1,int(data_count)+1):
+                K = 0 # machine capacity
+                f_dat = jobs+"J"+machines+"M"+"/DAT/"+jobs+"J"+machines+"M"+benefit+capacity+loading+"-"+str(x)+".dat"
+                f = open(f_dat,'w')
+                f.write(jobs+" "+machines+"\n")
 
-def L(x):
-    return {
-        0: 'L',
-        1: 'X',
-        2: 'A',
-        3: 'R',
-    }[x%4]       
+                for y in range(1,int(jobs)+1):
+                    if benefit == "N":
+                        b = round(random.gauss(25, 5),4)
+                    elif benefit == "U":
+                        b = round(random.uniform(0, 50),4)
+                    if loading == "L":
+                        c = b;
+                    elif loading == "X":
+                        c = round(math.sqrt(b),4)
+                    elif loading == "A":
+                        c = round(pow(b,2),4)
+                    elif loading == "R":
+                        c = round(random.uniform(0,50),4)
+                    
+                    f.write(str(b)+" "+str(c)+"\n")
 
-for xx in range (0,24):
-    benefit = B(xx)
-    capacity = C(xx)
-    loading = L(xx)
+                    K += c
+                if capacity != "N":
+                    K = round(K/int(machines),4)
+                    if capacity == "T":
+                        K = round(0.75*K,4)
 
-    for x in range (1,int(data_count)+1):
-        K = 0 # machine capacity
-        f_dat = jobs+"J"+machines+"M"+"/DAT/"+jobs+"J"+machines+"M"+benefit+capacity+loading+"-"+str(x)+".dat"
-        f = open(f_dat,'w')
-        f.write(jobs+" "+machines+"\n")
-
-        for y in range (1,int(jobs)+1):
-            if benefit == "N":
-                b = round(random.gauss(25, 5),4)
-            elif benefit == "U":
-                b = round(random.uniform(0, 50),4)
-            if loading == "L":
-                c = b;
-            elif loading == "X":
-                c = round(math.sqrt(b),4)
-            elif loading == "A":
-                c = round(pow(b,2),4)
-            elif loading == "R":
-                c = round(random.uniform(0,50),4)
-            
-            f.write(str(b)+" "+str(c)+"\n")
-            
-            K += c
-        if capacity != "N":
-            K = round(K/int(machines),4)
-            if capacity == "T":
-                K = round(0.75*K,4)
-
-        f.write(str(K))
-        f.close()
+                f.write(str(K))
+                f.close()
 
 
                 

@@ -189,6 +189,8 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
         zcapacity = [0]*int(machines)
         job_check = [0]*int(jobs)
 
+        vf.write("*****"+f_dat+"*****\n")
+
         with open(f_dat, "r") as ins:
             Array_dat = []
             for line in ins:
@@ -207,10 +209,14 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
             
         for y in llist[x-1]:
             #if capacity != "N":
-            if y.value == 1:
+            if y.value == "1":
                 job_check[int(y.dist_j)-1] = 1
                 zcapacity[int(y.dist_m)-1] += float(c_arr[int(y.dist_j)-1])
                 zvalue[int(y.dist_m)-1] += float(b_arr[int(y.dist_j)-1])
+                vf.write("@1 job "+y.dist_j+" allocated to machine "+y.dist_m+"\n")
+                vf.write("M1: "+str(zcapacity[0])+" ")
+                vf.write("M2: "+str(zcapacity[1])+" ")
+                vf.write("M3: "+str(zcapacity[2])+" \n\n")
             # else:
             #     sortlist[int(y.dist_j)-1].append(SolStruct(y.dist_j,y.value,y.dist_m))
 
@@ -220,10 +226,10 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
             tmp_b_arr.append(float(b))
         jindex = range(int(jobs))        
         #tmp_b_arr = list(b_arr)
-        idx_benefit = sorted(zip(jindex, tmp_b_arr), key = itemgetter(1), reverse = True)
+        idx_benefit = sorted(zip(jindex, tmp_b_arr), key = lambda x:x[1], reverse = True)
         
 
-        vf.write("idx_benefit: "+str(idx_benefit)+"\n")
+        #vf.write("idx_benefit: "+str(idx_benefit)+"\n")
         # tmp_b_arr = list(b_arr)
         # combine = zip(tmp_b_arr, sortlist)
         # sortlist_x = [sortlist for tmp_b_arr, sortlist in sorted(combine, reverse = True)]
@@ -233,16 +239,22 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
                 
         for j in idx_benefit:
             idx_zvalue = zip(mindex, zvalue)
-            idx_zvalue = sorted(idx_zvalue, key = itemgetter(0))
-            vf.write("idx_zvalue: "+str(idx_zvalue)+"\n")
+            idx_zvalue = sorted(idx_zvalue, key = lambda x:x[1])
+            #vf.write("idx_zvalue: "+str(idx_zvalue)+"\n")
             for m in idx_zvalue:
-                vf.write("m[0]: "+str(m[0])+" j[0] = "+str(j[0])+"j[1] ="+str(j[1])+"\n")
+                vf.write("m[0]: "+str(m[0])+" j[0] = "+str(j[0])+" j[1] ="+str(j[1])+"\n")
                 tmp = zcapacity[int(m[0])] + float(c_arr[j[0]])
-            if job_check[j[0]] == 0:
-                if tmp <= K:
-                    zvalue[m[0]] += float(j[1])
-                    zcapacity[m[0]] += float(c_arr[j[0]])
-                    job_check[j[0]] = 1
+                vf.write("tmp = "+str(tmp)+" K = "+K+"\n")
+                if job_check[j[0]] == 0:
+                    vf.write("job check"+str(job_check[j[0]])+"\n")
+                    if tmp <= float(K):
+                        zvalue[m[0]] += float(j[1])
+                        zcapacity[m[0]] += float(c_arr[j[0]])
+                        job_check[j[0]] = 1
+                        vf.write("@2 job "+y.dist_j+" allocated to machine "+y.dist_m+"\n")
+                        vf.write("M1: "+str(zcapacity[0])+" ")
+                        vf.write("M2: "+str(zcapacity[1])+" ")
+                        vf.write("M3: "+str(zcapacity[2])+" \n\n")    
 
         # for j in range(0, int(jobs)):
         #     idx_zvalue = zip(zvalue, mindex)

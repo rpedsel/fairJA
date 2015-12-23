@@ -5,7 +5,7 @@ from operator import attrgetter, truediv
 
 SolStruct = namedtuple("SolStruct", "dist_j value dist_m")
 
-def zStartSeeker(benefit, capacity, loading):
+def zStarSeeker(benefit, capacity, loading):
 
     z_star = []
 
@@ -174,10 +174,6 @@ def zLinearSeeker(benefit, capacity, loading):
 
 def zApproximateSeeker(benefit, capacity, loading, llist):
     
- 
-    #v = "testlog" 
-    #vf = open(v, 'a')   
-    
     z_apxm = []
 
     for x in range (1,int(data_count)+1):
@@ -207,8 +203,7 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
 
             
         for y in llist[x-1]:
-            #if capacity != "N":
-            if y.value == 1.0:
+            if y.value == "1":
                 job_check[int(y.dist_j)-1] = 1
                 zcapacity[int(y.dist_m)-1] += float(c_arr[int(y.dist_j)-1])
                 zvalue[int(y.dist_m)-1] += float(b_arr[int(y.dist_j)-1])
@@ -216,7 +211,6 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
                 sortlist[int(y.dist_j)-1].append(SolStruct(y.dist_j,float(y.value),y.dist_m))
 
         # job with high benefit -> low benefit        
-
         tmp_b_arr = []
         for b in b_arr:
             tmp_b_arr.append(float(b))
@@ -228,9 +222,6 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
         for j in range(0,int(jobs)):
             sortlist_x[j] = sorted(sortlist_x[j], key = attrgetter('value'), reverse = True)
 
-            ###
-            #vf.write(str(sorted(sortlist_x[j], key = attrgetter('value'), reverse = True))+"\n")
-
             for jm in range(0,len(sortlist_x[j])):
                 mm = int(sortlist_x[j][jm].dist_m)-1
                 jj = int(sortlist_x[j][jm].dist_j)-1
@@ -240,20 +231,7 @@ def zApproximateSeeker(benefit, capacity, loading, llist):
                         zvalue[mm] += float(b_arr[jj])
                         zcapacity[mm] += float(c_arr[jj])
                         job_check[jj] = 1
-                    #break          
-                
-        # if capacity == "N":
-        #     for l1 in range(0,len(llist[x-1])):
-        #         for l2 in range(l1+1,len(llist[x-1])):
-        #             if llist[x-1][l1].dist_j == llist[x-1][l2].dist_j:
-        #                 if llist[x-1][l1].value >= llist[x-1][l2].value:
-        #                     llist[x-1][l2] = llist[x-1][l2]._replace(value = 0)
-        #                 else:
-        #                     llist[x-1][l1] = llist[x-1][l1]._replace(value = 0)
-        #     for y in range(0,len(llist[x-1])):
-        #         if llist[x-1][y].value != 0:
-        #             llist[x-1][y] = llist[x-1][y]._replace(value = 1)
-        #             zvalue[int(llist[x-1][y].dist_m)-1] += float(b_arr[int(llist[x-1][y].dist_j)-1])*int(llist[x-1][y].value)
+
                     
         minzvalue = min(zvalue)
         z_apxm.append(round(minzvalue,4))
@@ -295,11 +273,9 @@ for xx in range (1,3):
             else:
                 loading = "R"
             
-            z_star = zStartSeeker(benefit, capacity, loading)
+            z_star = zStarSeeker(benefit, capacity, loading)
             z_linear, z_linear_list = zLinearSeeker(benefit, capacity, loading)
             z_apxm = zApproximateSeeker(benefit, capacity, loading, z_linear_list)
-
-            #print "****z_linear_list****: "z_linear_list+"\n"
 
             z_star_avg = round(sum(z_star)/float(len(z_star)), 4)
             z_apxm_avg = round(sum(z_apxm)/float(len(z_apxm)), 4)
