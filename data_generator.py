@@ -49,34 +49,48 @@ for xx in range (1,3):
             else:
                 loading = "R"
 
-            for x in range(1,int(data_count)+1):
-                K = 0 # machine capacity
-                f_dat = jobs+"J"+machines+"M"+"/DAT/"+jobs+"J"+machines+"M"+benefit+capacity+loading+"-"+str(x)+".dat"
+            for x in range(0,int(data_count)):
+                b = []
+                c = []
+                check = 0
+                K = 0
+                f_dat = jobs+"J"+machines+"M"+"/DAT/"+jobs+"J"+machines+"M"+benefit+capacity+loading+"-"+str(x+1)+".dat"
                 f = open(f_dat,'w')
                 f.write(jobs+" "+machines+"\n")
+                while(check == 0):
+                    K = 0
+                    for y in range(0,int(jobs)):
+                        if benefit == "N":
+                            b_tmp = round(random.gauss(25, 5),4)
+                            b.append(b_tmp)
+                        elif benefit == "U":
+                            b_tmp = round(random.uniform(0, 50),4)
+                            b.append(b_tmp)
+                        if loading == "L":
+                            c_tmp = b_tmp
+                            c.append(c_tmp);
+                        elif loading == "X":
+                            c_tmp = round(math.sqrt(b_tmp),4)
+                            c.append(c_tmp)
+                        elif loading == "A":
+                            c_tmp = round(pow(b_tmp,2),4)
+                            c.append(c_tmp)
+                        elif loading == "R":
+                            c_tmp = round(random.uniform(0,50),4)
+                            c.append(c_tmp)
+                        K += c_tmp
+                    if capacity != "N":
+                        K = round(K/int(machines),4)
+                        if capacity == "T":
+                            K = round(0.75*K,4)
+                    check = 1
+                    for y in range(0,int(jobs)):
+                        if c[y] > K:
+                            check = 0
 
-                for y in range(1,int(jobs)+1):
-                    if benefit == "N":
-                        b = round(random.gauss(25, 5),4)
-                    elif benefit == "U":
-                        b = round(random.uniform(0, 50),4)
-                    if loading == "L":
-                        c = b;
-                    elif loading == "X":
-                        c = round(math.sqrt(b),4)
-                    elif loading == "A":
-                        c = round(pow(b,2),4)
-                    elif loading == "R":
-                        c = round(random.uniform(0,50),4)
-                    
-                    f.write(str(b)+" "+str(c)+"\n")
-
-                    K += c
-                if capacity != "N":
-                    K = round(K/int(machines),4)
-                    if capacity == "T":
-                        K = round(0.75*K,4)
-
+                for y in range(0, int(jobs)):
+                    f.write(str(b[y])+" "+str(c[y])+"\n")
+                            
                 f.write(str(K))
                 f.close()
 

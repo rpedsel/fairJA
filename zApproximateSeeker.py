@@ -2,13 +2,15 @@ from subprocess import call
 from collections import namedtuple 
 from operator import attrgetter, truediv
 SolStruct = namedtuple("SolStruct", "dist_j value dist_m")
-
+v = "testlog" 
+vf = open(v, 'w')
 
 def zApproximateSeek(benefit, capacity, loading, llist, data_count,jobs, machines):
     
     z_apxm = []
 
     for x in range (1,int(data_count)+1):
+        count = 0
         sortlist = []
         b_arr = []
         c_arr = []
@@ -17,6 +19,8 @@ def zApproximateSeek(benefit, capacity, loading, llist, data_count,jobs, machine
         zvalue = [0]*int(machines)
         zcapacity = [0]*int(machines)
         job_check = [0]*int(jobs)
+
+        vf.write("*****"+f_dat+"*****\n")
 
         with open(f_dat, "r") as ins:
             Array_dat = []
@@ -39,6 +43,11 @@ def zApproximateSeek(benefit, capacity, loading, llist, data_count,jobs, machine
                 job_check[int(y.dist_j)-1] = 1
                 zcapacity[int(y.dist_m)-1] += float(c_arr[int(y.dist_j)-1])
                 zvalue[int(y.dist_m)-1] += float(b_arr[int(y.dist_j)-1])
+                vf.write("@1 job "+y.dist_j+" allocated to machine "+y.dist_m+"\n")
+                count +=1
+                for i in range(int(machines)):
+                    vf.write("M"+str(i+1)+": "+str(zcapacity[i])+"  ")
+                vf.write("\n\n")
             else:
                 sortlist[int(y.dist_j)-1].append(SolStruct(y.dist_j,float(y.value),y.dist_m))
 
@@ -54,21 +63,30 @@ def zApproximateSeek(benefit, capacity, loading, llist, data_count,jobs, machine
             for jm in range(0,len(sortlist_x[j])):
                 mm = int(sortlist_x[j][jm].dist_m)-1
                 jj = int(sortlist_x[j][jm].dist_j)-1
+                vf.write("M: "+sortlist_x[j][jm].dist_m+" J = "+sortlist_x[j][jm].dist_j+" j_benefit ="+b_arr[jj]+"\n")
                 tmp = zcapacity[mm] + float(c_arr[jj])
+                vf.write("tmp = "+str(tmp)+" K = "+K+"\n")
                 if tmp <= float(K):
                     if job_check[jj] == 0:
+                        vf.write("job check "+sortlist_x[j][jm].dist_j+"\n")
                         zvalue[mm] += float(b_arr[jj])
                         zcapacity[mm] += float(c_arr[jj])
                         job_check[jj] = 1
-                    
+                        vf.write("@2 job "+sortlist_x[j][jm].dist_j+" allocated to machine "+sortlist_x[j][jm].dist_m+"\n")
+                        count +=1
+                        for i in range(int(machines)):
+                            vf.write("M"+str(i+1)+": "+str(zcapacity[i])+"  ")
+                        vf.write("\n\n")
+
+        vf.write("*******count = "+str(count)+"\n")            
         minzvalue = min(zvalue)
         z_apxm.append(round(minzvalue,4))
     return z_apxm
 
 def zApproximateSeek_v2(benefit, capacity, loading, llist, data_count,jobs, machines):
     
-    v = "testlog" 
-    vf = open(v, 'a')   
+    # v = "testlog" 
+    # vf = open(v, 'a')   
  
     z_apxm = []
 
@@ -101,9 +119,9 @@ def zApproximateSeek_v2(benefit, capacity, loading, llist, data_count,jobs, mach
                 zcapacity[int(y.dist_m)-1] += float(c_arr[int(y.dist_j)-1])
                 zvalue[int(y.dist_m)-1] += float(b_arr[int(y.dist_j)-1])
                 vf.write("@1 job "+y.dist_j+" allocated to machine "+y.dist_m+"\n")
-                vf.write("M1: "+str(zcapacity[0])+" ")
-                vf.write("M2: "+str(zcapacity[1])+" ")
-                vf.write("M3: "+str(zcapacity[2])+" \n\n")
+                for i in range(int(machines)):
+                    vf.write("M"+str(i+1)+": "+str(zcapacity[i])+"  ")
+                vf.write("\n\n")
 
         #job with high benefit -> low benefit
         tmp_b_arr = []
@@ -125,15 +143,15 @@ def zApproximateSeek_v2(benefit, capacity, loading, llist, data_count,jobs, mach
                 tmp = zcapacity[int(m[0])] + float(c_arr[j[0]])
                 vf.write("tmp = "+str(tmp)+" K = "+K+"\n")
                 if job_check[j[0]] == 0:
-                    vf.write("job check"+str(j[0]+1)+"\n")
+                    vf.write("job check "+str(j[0]+1)+"\n")
                     if tmp <= float(K):
                         zvalue[m[0]] += float(j[1])
                         zcapacity[m[0]] += float(c_arr[j[0]])
                         job_check[j[0]] = 1
                         vf.write("@2 job "+str(j[0]+1)+" allocated to machine "+str(m[0]+1)+"\n")
-                        vf.write("M1: "+str(zcapacity[0])+" ")
-                        vf.write("M2: "+str(zcapacity[1])+" ")
-                        vf.write("M3: "+str(zcapacity[2])+" \n\n")    
+                        for i in range(int(machines)):
+                            vf.write("M"+str(i+1)+": "+str(zcapacity[i])+"  ")
+                        vf.write("\n\n")    
                  
         minzvalue = min(zvalue)
         z_apxm.append(round(minzvalue,4))
